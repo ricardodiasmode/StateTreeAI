@@ -1,0 +1,8 @@
+//- Patrol;
+*colocar no mapa: diferentes IAs podem usar o mesmo patrol actor;
+- Chase;
+- Attack;
+- Stuck: NavigationSystemAS ativando quando cai em um lugar sem navmesh, para voltar para a navmesh;
+- Feast (spawna um cubo perto do monstro. Usar utilidade com Vida vs Distancia do corpse);
+- Mapa mostrando todas as mecanicas;
+- explicar plugins na doc;

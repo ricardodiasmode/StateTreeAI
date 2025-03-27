@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "NavigationAS",
+	"Description": "Create a simple navigation system for characters that does not rely on terrain generation",
+	"Category": "Other",
+	"CreatedBy": "Avelar Studios",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "NavigationAS",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
