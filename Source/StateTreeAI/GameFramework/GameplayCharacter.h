@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "StateTreeAICharacter.generated.h"
+#include "GameplayCharacter.generated.h"
 
 UCLASS(Blueprintable)
-class AStateTreeAICharacter : public ACharacter
+class AGameplayCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	AStateTreeAICharacter();
+	AGameplayCharacter();
 
 	// Called every frame.
 	virtual void Tick(float DeltaSeconds) override;

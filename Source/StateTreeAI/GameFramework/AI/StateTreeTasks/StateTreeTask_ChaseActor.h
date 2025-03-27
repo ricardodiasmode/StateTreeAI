@@ -4,23 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
-#include "StateTreeTask_StartPatrol.generated.h"
+#include "AITypes.h"
+#include "Navigation/PathFollowingComponent.h"
+#include "StateTreeTask_ChaseActor.generated.h"
 
-struct FPathFollowingResult;
 /**
  * 
  */
 UCLASS()
-class STATETREEAI_API UStateTreeTask_StartPatrol : public UStateTreeTaskBlueprintBase
+class STATETREEAI_API UStateTreeTask_ChaseActor : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
-	class AAIController* AIController = nullptr;
+	class ABaseAIController* AIController = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
-	float PatrolSpeed = 230.f;
-	
+	float Acceptance = 150.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
+	float ChaseSpeed = 600.f;
+
 protected:
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
+
+public:
+	void MoveFinished(FAIRequestID FaiRequestID, const FPathFollowingResult& PathFollowingResult);
+	
 };

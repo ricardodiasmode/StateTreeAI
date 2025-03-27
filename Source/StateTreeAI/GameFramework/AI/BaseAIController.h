@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "Perception/AIPerceptionTypes.h"
 #include "BaseAIController.generated.h"
 
 UCLASS()
@@ -16,6 +17,13 @@ protected:
 	class UStateTreeComponent* StateTreeComponent = nullptr;
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AActor* Target = nullptr;
+
+public:
+	UFUNCTION()
+	void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
+	
 	// Sets default values for this actor's properties
 	ABaseAIController();
 

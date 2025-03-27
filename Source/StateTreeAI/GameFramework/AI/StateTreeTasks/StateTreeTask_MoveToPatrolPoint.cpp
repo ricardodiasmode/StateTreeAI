@@ -33,7 +33,8 @@ EStateTreeRunStatus UStateTreeTask_MoveToPatrolPoint::EnterState(FStateTreeExecu
 	UPatrolComponent* CharacterPatrolComponent = AICharacter->GetPatrolComponent();
 	const FVector PatrolPoint = CharacterPatrolComponent->GetCurrentPatrolPointAndMoveToNext();
 	AIController->MoveToLocation(PatrolPoint,
-		Acceptance);
+		Acceptance,
+		false);
 	
 	return EStateTreeRunStatus::Running;
 }

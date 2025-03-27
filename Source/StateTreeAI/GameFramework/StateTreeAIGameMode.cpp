@@ -2,7 +2,7 @@
 
 #include "StateTreeAIGameMode.h"
 #include "StateTreeAIPlayerController.h"
-#include "StateTreeAICharacter.h"
+#include "GameplayCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
 AStateTreeAIGameMode::AStateTreeAIGameMode()

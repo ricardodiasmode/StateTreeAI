@@ -4,7 +4,9 @@
 #include "BaseAIController.h"
 
 #include "Components/StateTreeAIComponent.h"
-
+#include "Perception/AIPerceptionComponent.h"
+#include "Perception/AISenseConfig_Sight.h"
+#include "StateTreeAI/GameFramework/GameplayCharacter.h"
 
 // Sets default values
 ABaseAIController::ABaseAIController()
@@ -13,6 +15,9 @@ ABaseAIController::ABaseAIController()
 	PrimaryActorTick.bCanEverTick = false;
 
 	StateTreeComponent = CreateDefaultSubobject<UStateTreeComponent>("StateTreeComponent");
+
+	PerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
+	PerceptionComponent->OnTargetPerceptionUpdated.AddUniqueDynamic(this, &ABaseAIController::PerceptionUpdated);
 }
 
 // Called when the game starts or when spawned
@@ -24,3 +29,16 @@ void ABaseAIController::BeginPlay()
 	StateTreeComponent->RestartLogic();
 }
 
+void ABaseAIController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+{
+	if (!Actor->IsA(AGameplayCharacter::StaticClass()))
+		return;
+	
+	if (!Target && Stimulus.WasSuccessfullySensed())
+	{
+		Target = Actor;
+	} else
+	{
+		Target = nullptr;
+	}
+}

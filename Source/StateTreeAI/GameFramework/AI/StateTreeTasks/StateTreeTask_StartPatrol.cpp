@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Misc/GeneralFunctionLibrary.h"
 #include "StateTreeAI/GameFramework/AI/BaseAICharacter.h"
 #include "StateTreeAI/GameFramework/Components/PatrolComponent.h"
@@ -25,6 +26,8 @@ EStateTreeRunStatus UStateTreeTask_StartPatrol::EnterState(FStateTreeExecutionCo
 		GPrintError("!AICharacter on UStateTreeStartPatrolTask::EnterState. Will not proceed.");
 		return EStateTreeRunStatus::Failed;
 	}
+
+	AICharacter->GetCharacterMovement()->MaxWalkSpeed = PatrolSpeed;
 
 	UPatrolComponent* CharacterPatrolComponent = AICharacter->GetPatrolComponent();
 	CharacterPatrolComponent->DefineCurrentPatrolPointToClosestPoint();

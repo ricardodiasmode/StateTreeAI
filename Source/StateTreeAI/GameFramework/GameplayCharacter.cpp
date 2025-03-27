@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "StateTreeAICharacter.h"
+#include "GameplayCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
@@ -11,7 +11,7 @@
 #include "Materials/Material.h"
 #include "Engine/World.h"
 
-AStateTreeAICharacter::AStateTreeAICharacter()
+AGameplayCharacter::AGameplayCharacter()
 {
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -45,7 +45,7 @@ AStateTreeAICharacter::AStateTreeAICharacter()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
-void AStateTreeAICharacter::Tick(float DeltaSeconds)
+void AGameplayCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 }
