@@ -4,9 +4,11 @@
 #include "BaseAICharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "NavigationSystem.h"
 #include "Misc/GeneralFunctionLibrary.h"
 #include "StateTreeAI/GameFramework/AbilitySystem/AttributeSets/BaseAttributeSet.h"
 #include "StateTreeAI/GameFramework/Components/PatrolComponent.h"
+#include "Components/NavComponentAS.h"
 
 // Sets default values
 ABaseAICharacter::ABaseAICharacter()
@@ -19,6 +21,8 @@ ABaseAICharacter::ABaseAICharacter()
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComponent");
 	
 	AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>("AttributeSet");
+	
+	NavComponent = CreateDefaultSubobject<UNavComponentAS>("NavComponent");
 }
 
 void ABaseAICharacter::BeginPlay()
@@ -35,6 +39,11 @@ void ABaseAICharacter::InitAbilitySystem()
 	ActivateEffect(DefaultAttributeEffect, this);
 
 	AbilitySystemComponent->GiveAbility(AttackAbility);
+}
+
+void ABaseAICharacter::RecoveryFinish()
+{
+	OnRecoveryFinishDelegate.Broadcast();
 }
 
 void ABaseAICharacter::ActivateEffect(const TSubclassOf<UGameplayEffect>& Effect, AActor* Source)
@@ -69,6 +78,21 @@ void ABaseAICharacter::Attack()
 	if (!AbilitySystemComponent->TryActivateAbilityByClass(AttackAbility))
 	{
 		GPrintErrorWithVar("Could not activate ability on AI: %s, probably ability was not given.", *UKismetSystemLibrary::GetDisplayName(this));
+	}
+}
+
+void ABaseAICharacter::StartRecovery()
+{
+	FNavLocation ProjectedLocation;
+	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
+	if (NavSys && NavSys->ProjectPointToNavigation(GetActorLocation(), ProjectedLocation, FVector(500, 500, 500)))
+	{
+		FVector ClosestPointOnNavigation = ProjectedLocation.Location;
+
+		GPrintDebug("start walking");
+		NavComponent->OnMoveFailed.AddUniqueDynamic(this, &ABaseAICharacter::RecoveryFinish);
+		NavComponent->OnMoveSuccess.AddUniqueDynamic(this, &ABaseAICharacter::RecoveryFinish);
+		NavComponent->WalkToLocation(ClosestPointOnNavigation, 90.f);
 	}
 }
 

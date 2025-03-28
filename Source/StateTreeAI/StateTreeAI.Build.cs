@@ -11,6 +11,7 @@ public class StateTreeAI : ModuleRules
         PublicDependencyModuleNames.AddRange(new string[] { "Core", 
 	        "CoreAS",
 	        "CoreUObject", 
+	        "NavigationAS",
 	        "AIModule",
 	        "StateTreeModule",
 	        "GameplayTags",

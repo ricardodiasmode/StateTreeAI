@@ -10,6 +10,7 @@
 
 class UBaseAttributeSet;
 class UPatrolComponent;
+class UNavComponentAS;
 
 UCLASS()
 class STATETREEAI_API ABaseAICharacter : public ACharacter,
@@ -28,6 +29,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UPatrolComponent* PatrolComponent = nullptr;
 
+	UPROPERTY(EditDefaultsOnly)
+	UNavComponentAS* NavComponent = nullptr;
+
 	UPROPERTY(EditDefaultsOnly, Category="AbilitySystem")
 	TSubclassOf<UGameplayAbility> AttackAbility;
 	UPROPERTY(EditDefaultsOnly, Category="AbilitySystem")
@@ -37,6 +41,9 @@ private:
 	void ActivateEffect(const TSubclassOf<UGameplayEffect>& Effect, AActor* Source);
 
 	void InitAbilitySystem();
+	
+	UFUNCTION()
+	void RecoveryFinish();
 
 protected:
 	virtual void BeginPlay() override;
@@ -44,6 +51,11 @@ protected:
 public:
 	// Sets default values for this character's properties
 	ABaseAICharacter();
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnRecoveryFinishSignature);
+	FOnRecoveryFinishSignature OnRecoveryFinishDelegate;
+	
+	void StartRecovery();
 
 	void Attack();
 

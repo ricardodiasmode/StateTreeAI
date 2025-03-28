@@ -3,26 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Abilities/GameplayAbilityTypes.h"
 #include "Blueprint/StateTreeTaskBlueprintBase.h"
-#include "StateTreeTask_Attack.generated.h"
+#include "StateTreeTask_Recovery.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class STATETREEAI_API UStateTreeTask_Attack : public UStateTreeTaskBlueprintBase
+class STATETREEAI_API UStateTreeTask_Recovery : public UStateTreeTaskBlueprintBase
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
 	class ABaseAIController* AIController = nullptr;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ExposeOnSpawn = "true"))
-	float DistanceToHitAgain = 150.f;
+
+private:
+	UFUNCTION()
+	void FinishRecovery();
 
 public:
-	void WaitAttackEnd(const FAbilityEndedData& AbilityEndedData);
-	
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
 };
