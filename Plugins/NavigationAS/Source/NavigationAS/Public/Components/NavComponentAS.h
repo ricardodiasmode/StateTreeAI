@@ -3,9 +3,29 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <atomic>
 
 #include "NavComponentAS.generated.h"
 
+class AtomicFVector {
+public:
+	std::atomic<float> X, Y, Z;
+
+	AtomicFVector() : X(0), Y(0), Z(0) {} // Default constructor
+	AtomicFVector(float x, float y, float z) : X(x), Y(y), Z(z) {} // Parameterized constructor
+
+	FVector load() const {
+		return FVector(X.load(std::memory_order_acquire), 
+					   Y.load(std::memory_order_acquire), 
+					   Z.load(std::memory_order_acquire));
+	}
+
+	void store(const FVector& NewValue) {
+		X.store(NewValue.X, std::memory_order_release);
+		Y.store(NewValue.Y, std::memory_order_release);
+		Z.store(NewValue.Z, std::memory_order_release);
+	}
+};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class NAVIGATIONAS_API UNavComponentAS : public UActorComponent
@@ -15,9 +35,9 @@ class NAVIGATIONAS_API UNavComponentAS : public UActorComponent
 private:
 	FCriticalSection GenerationMutex;
 
-	UPROPERTY()
-	AActor* CurrentTarget = nullptr;
-	FVector TargetLocation;
+	std::atomic<AActor*> CurrentTarget;
+
+	AtomicFVector TargetLocation;
 	
 	UPROPERTY()
 	ACharacter* OwnerCharacter = nullptr;

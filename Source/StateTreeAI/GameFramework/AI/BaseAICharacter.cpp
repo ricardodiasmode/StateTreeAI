@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "NavigationSystem.h"
+#include "Components/CapsuleComponent.h"
 #include "Misc/GeneralFunctionLibrary.h"
 #include "StateTreeAI/GameFramework/AbilitySystem/AttributeSets/BaseAttributeSet.h"
 #include "StateTreeAI/GameFramework/Components/PatrolComponent.h"
@@ -85,14 +86,23 @@ void ABaseAICharacter::StartRecovery()
 {
 	FNavLocation ProjectedLocation;
 	UNavigationSystemV1* NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld());
-	if (NavSys && NavSys->ProjectPointToNavigation(GetActorLocation(), ProjectedLocation, FVector(500, 500, 500)))
+	if (NavSys && NavSys->ProjectPointToNavigation(GetActorLocation(), ProjectedLocation, FVector(MaximumRecoveryDistance)))
 	{
-		FVector ClosestPointOnNavigation = ProjectedLocation.Location;
+		const FVector HeightOffset(0.f, 0.f, 89.f);
+		FVector ClosestPointOnNavigation = ProjectedLocation.Location + HeightOffset;
 
-		GPrintDebug("start walking");
+		static constexpr float MinimumDistanceFromCharacter = 50.f;
+		if (FVector::Distance(ClosestPointOnNavigation, GetActorLocation()) < MinimumDistanceFromCharacter)
+		{ // if too close from character, go a bit inner
+			FVector Direction = ClosestPointOnNavigation - GetActorLocation();
+			Direction.Z = 0.f;
+			Direction.Normalize();
+			ClosestPointOnNavigation += Direction*MinimumDistanceFromCharacter;
+		}
+
 		NavComponent->OnMoveFailed.AddUniqueDynamic(this, &ABaseAICharacter::RecoveryFinish);
 		NavComponent->OnMoveSuccess.AddUniqueDynamic(this, &ABaseAICharacter::RecoveryFinish);
-		NavComponent->WalkToLocation(ClosestPointOnNavigation, 90.f);
+		NavComponent->WalkToLocation(ClosestPointOnNavigation, 15.f);
 	}
 }
 

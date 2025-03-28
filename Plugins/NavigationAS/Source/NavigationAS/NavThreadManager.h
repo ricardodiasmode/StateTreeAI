@@ -29,6 +29,4 @@ public:
 	static FCriticalSection PathMutex;
 	
 	static FCriticalSection TargetMutex;
-	static FCriticalSection GraphThreadDeletionMutex;
-	static FCriticalSection PathThreadDeletionMutex;
 };

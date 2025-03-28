@@ -2,7 +2,7 @@
 *colocar no mapa: diferentes IAs podem usar o mesmo patrol actor;
 //- Chase;
 //- Attack;
-- Stuck: NavigationSystemAS ativando quando cai em um lugar sem navmesh, para voltar para a navmesh;
+//- Stuck: NavigationSystemAS ativando quando cai em um lugar sem navmesh, para voltar para a navmesh;
 - IA passando por chão queimando e do outro lado spawna objetos para feast:
 - Feast (spawna um cubo perto do monstro. Usar utilidade com Vida vs Distancia do corpse);
 

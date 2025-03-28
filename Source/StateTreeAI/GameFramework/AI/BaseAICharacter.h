@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	UNavComponentAS* NavComponent = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category="Config")
+	float MaximumRecoveryDistance = 5000.f;
+
 	UPROPERTY(EditDefaultsOnly, Category="AbilitySystem")
 	TSubclassOf<UGameplayAbility> AttackAbility;
 	UPROPERTY(EditDefaultsOnly, Category="AbilitySystem")

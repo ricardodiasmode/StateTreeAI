@@ -34,7 +34,7 @@ void UNavComponentAS::BeginPlay()
 	OwnerCharacter = CastChecked<ACharacter>(GetOwner());
 
     // Target loc default is owner loc
-    TargetLocation = GetOwner()->GetActorLocation();
+    TargetLocation.store(GetOwner()->GetActorLocation());
 
     if (bDebugGraph)
     {
@@ -85,11 +85,7 @@ void UNavComponentAS::WalkToActor(AActor* Target,
     if (Deadline != -1)
         StartDeadlineTimer(Deadline);
     
-    {
-    FScopeLock TargetLock(&FNavThreadManager::TargetMutex);
-    
-        CurrentTarget = Target;
-    }
+    CurrentTarget.store(Target);
     
     StartWalking();
 }
@@ -122,32 +118,30 @@ void UNavComponentAS::WalkToLocation(const FVector& Target,
     if (Deadline != -1)
         StartDeadlineTimer(Deadline);
     
-    {
-        FScopeLock TargetLock(&FNavThreadManager::TargetMutex);
-    
-        TargetLocation = Target;
-    }
+    TargetLocation.store(Target);
     
     StartWalking();
 }
 
 void UNavComponentAS::StopWalking()
 {
+    TRACE_CPUPROFILER_EVENT_SCOPE_STR("StopWalking");
+    
     GetWorld()->GetTimerManager().ClearTimer(DeadlineHandle);
 
     SetComponentTickEnabled(false);
     
     FNavThreadManager::RemoveComponent(this);
     
-    FScopeLock TargetLock(&FNavThreadManager::TargetMutex);
-    
-    CurrentTarget = nullptr;
+    CurrentTarget.store(nullptr);
     if (GetOwner())
-        TargetLocation = GetOwner()->GetActorLocation();
+        TargetLocation.store(GetOwner()->GetActorLocation());
 }
 
 void UNavComponentAS::StartWalking()
 {
+    TRACE_CPUPROFILER_EVENT_SCOPE_STR("StartWalking");
+    
     PathDefined = false;
     
     FNavThreadManager::AddComponent(this);
@@ -170,11 +164,7 @@ void UNavComponentAS::GenerateGraph()
     const float OwnerHeight = OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
     const float OwnerRadius = OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleRadius();
     const FVector OwnerLoc = OwnerCharacter->GetActorLocation();
-    FVector TargetLoc;
-    {
-        FScopeLock TargetLock(&FNavThreadManager::TargetMutex);
-        TargetLoc = CurrentTarget ? CurrentTarget->GetActorLocation() : TargetLocation;
-    }
+    FVector TargetLoc = CurrentTarget.load() ? CurrentTarget.load()->GetActorLocation() : TargetLocation.load();
 
     // This struct and TArray hold edges (if you need to keep them).
     struct FGraphEdge { int32 FromNode; int32 ToNode; };
@@ -281,8 +271,8 @@ int UNavComponentAS::GetFarthestReachablePoint(const TArray<FVector>& VectorPath
         FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
         QueryParams.AddIgnoredActor(GetOwner());
 
-        if (CurrentTarget)
-            QueryParams.AddIgnoredActor(CurrentTarget);
+        if (CurrentTarget.load())
+            QueryParams.AddIgnoredActor(CurrentTarget.load());
         
         if (!GetWorld()->SweepTestByChannel(OwnerLoc,
             VectorPath[i],
@@ -352,11 +342,7 @@ void UNavComponentAS::FindPathToClosestPointOnGraph()
     // Map to track the parent of each node for path reconstruction.
     TMap<int32, int32> Parent;
     
-    FVector TargetLoc;
-    {
-        FScopeLock TargetLock(&FNavThreadManager::TargetMutex);
-        TargetLoc = CurrentTarget ? CurrentTarget->GetActorLocation() : TargetLocation;
-    }
+    FVector TargetLoc = CurrentTarget.load() ? CurrentTarget.load()->GetActorLocation() : TargetLocation.load();
     
     auto Heuristic = [&](int32 NodeIndex) -> float
     {
@@ -416,6 +402,8 @@ void UNavComponentAS::FindPathToClosestPointOnGraph()
             }
         }
     }
+    if (bDebugPathFinding)
+        UE_LOG(LogTemp, Display, TEXT("Finished A*..."));
     
     // Reconstruct path from BestIndex back to StartIndex.
     TArray<int32> Path;
@@ -484,7 +472,7 @@ void UNavComponentAS::Walk(const float DeltaTime)
         return;
     }
 
-    const FVector LocationToCompare = CurrentTarget ? CurrentTarget->GetActorLocation() : TargetLocation;
+    const FVector LocationToCompare = CurrentTarget.load() ? CurrentTarget.load()->GetActorLocation() : TargetLocation.load();
     if (FVector::Dist(LocationToCompare, OwnerCharacter->GetActorLocation()) <= CurrentAcceptanceRadius)
     {
         if (bDebugWalk)
@@ -543,8 +531,12 @@ void UNavComponentAS::Walk(const float DeltaTime)
         CurrentDesiredPath.RemoveAt(0);
     }
     if (CurrentDesiredPath.IsEmpty())
+    {
+        OnMoveSuccess.Broadcast();
+        StopWalking();
         return;
-
+    }
+    
     FVector MovementDirection = CurrentDesiredPath[0] - OwnerLoc;
     MovementDirection.Z = 0.f;
     MovementDirection.Normalize();

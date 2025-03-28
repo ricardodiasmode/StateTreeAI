@@ -8,9 +8,13 @@ uint32 FPathFinderRunnable::Run()
 {
 	while (bRunning)
 	{
-		FScopeLock Lock(&FNavThreadManager::PathMutex);
+		TArray<TWeakObjectPtr<UNavComponentAS>> Components;
+		{
+			FScopeLock Lock(&FNavThreadManager::PathMutex);
+			Components = FNavThreadManager::PathComponents;
+		}
 
-		for (TWeakObjectPtr<UNavComponentAS> Component : FNavThreadManager::PathComponents)
+		for (TWeakObjectPtr<UNavComponentAS> Component : Components)
 		{
 			if (!Component.IsValid(true, true) ||
 				Component.IsStale(true, true))

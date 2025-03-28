@@ -33,6 +33,21 @@ EStateTreeRunStatus UStateTreeTask_Recovery::EnterState(FStateTreeExecutionConte
 
 void UStateTreeTask_Recovery::FinishRecovery()
 {
-	GPrintDebug("finish recovery");
+	if (!AIController)
+	{
+		GPrintError("!AIController on UStateTreeTask_Recovery::FinishRecovery. Will not proceed.");
+		FinishTask(false);
+		return;
+	}
+		
+	ABaseAICharacter* AICharacter = Cast<ABaseAICharacter>(AIController->GetCharacter());
+	if (!AICharacter)
+	{
+		GPrintError("!AICharacter on UStateTreeTask_Recovery::FinishRecovery. Will not proceed.");
+		FinishTask(false);
+		return;
+	}
+
+	AICharacter->OnRecoveryFinishDelegate.RemoveAll(this);
 	FinishTask(true); // we will not handle failure because this is the last resort
 }
