@@ -1,8 +1,13 @@
 //- Patrol;
 *colocar no mapa: diferentes IAs podem usar o mesmo patrol actor;
 //- Chase;
-- Attack;
+//- Attack;
 - Stuck: NavigationSystemAS ativando quando cai em um lugar sem navmesh, para voltar para a navmesh;
+- IA passando por chão queimando e do outro lado spawna objetos para feast:
 - Feast (spawna um cubo perto do monstro. Usar utilidade com Vida vs Distancia do corpse);
 - Mapa mostrando todas as mecanicas;
 - explicar plugins na doc;
+
+- Para extender:
+1. É possível facilmente fazer o personagem tomar dano, dado que todo o setup da IA ja está feito no UAttackAbility;
+2. É possível facilmente fazer uma abilidade de ataque do personagem, já que o UAttackAbility pode também ser usado pelo character.

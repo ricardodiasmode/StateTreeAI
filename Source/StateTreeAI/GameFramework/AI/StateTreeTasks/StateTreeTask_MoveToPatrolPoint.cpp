@@ -16,14 +16,14 @@ EStateTreeRunStatus UStateTreeTask_MoveToPatrolPoint::EnterState(FStateTreeExecu
 	
 	if (!AIController)
 	{
-		GPrintError("!AIController on UStateTreeStartPatrolTask::EnterState. Will not proceed.");
+		GPrintError("!AIController on UStateTreeTask_MoveToPatrolPoint::EnterState. Will not proceed.");
 		return EStateTreeRunStatus::Failed;
 	}
 	
 	ABaseAICharacter* AICharacter = Cast<ABaseAICharacter>(AIController->GetCharacter());
 	if (!AICharacter)
 	{
-		GPrintError("!AICharacter on UStateTreeStartPatrolTask::EnterState. Will not proceed.");
+		GPrintError("!AICharacter on UStateTreeTask_MoveToPatrolPoint::EnterState. Will not proceed.");
 		return EStateTreeRunStatus::Failed;
 	}
 

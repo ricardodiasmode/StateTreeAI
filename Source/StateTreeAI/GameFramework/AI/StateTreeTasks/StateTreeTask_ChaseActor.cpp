@@ -32,7 +32,8 @@ EStateTreeRunStatus UStateTreeTask_ChaseActor::EnterState(FStateTreeExecutionCon
 	AIController->GetPathFollowingComponent()->OnRequestFinished.AddUObject(this, &UStateTreeTask_ChaseActor::MoveFinished);
 
 	AIController->MoveToActor(AIController->Target,
-		Acceptance);
+		Acceptance*0.75,
+		false);
 	
 	return EStateTreeRunStatus::Running;
 }
@@ -49,7 +50,7 @@ void UStateTreeTask_ChaseActor::MoveFinished(FAIRequestID FaiRequestID,
 
 	if (AIController->GetCharacter())
 	{
-		if (FVector::Distance(AIController->GetCharacter()->GetActorLocation(), AIController->Target->GetActorLocation()) < Acceptance)
+		if (FVector::Distance(AIController->GetCharacter()->GetActorLocation(), AIController->Target->GetActorLocation()) <= Acceptance)
 		{
 			FinishTask(true);
 			return;

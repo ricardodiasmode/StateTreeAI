@@ -13,6 +13,9 @@ public class StateTreeAI : ModuleRules
 	        "CoreUObject", 
 	        "AIModule",
 	        "StateTreeModule",
+	        "GameplayTags",
+	        "GameplayTasks",
+	        "GameplayAbilities",
 	        "Engine", "InputCore", "NavigationSystem", "AIModule", "Niagara", "EnhancedInput", "GameplayStateTreeModule" });
     }
 }
