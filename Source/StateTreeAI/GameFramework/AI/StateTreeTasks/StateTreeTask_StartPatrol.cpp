@@ -15,15 +15,12 @@ EStateTreeRunStatus UStateTreeTask_StartPatrol::EnterState(FStateTreeExecutionCo
 {
 	Super::EnterState(Context, Transition);
 	
-	if (!AIController)
+	if (!AIController) // Not error because can happen if AI just spawns
 		return EStateTreeRunStatus::Failed;
 	
 	ABaseAICharacter* AICharacter = Cast<ABaseAICharacter>(AIController->GetCharacter());
-	if (!AICharacter)
-	{
-		GPrintError("!AICharacter on UStateTreeStartPatrolTask::EnterState. Will not proceed.");
+	if (!AICharacter) // Not error because can happen if AI just spawns
 		return EStateTreeRunStatus::Failed;
-	}
 
 	AICharacter->GetCharacterMovement()->MaxWalkSpeed = PatrolSpeed;
 
