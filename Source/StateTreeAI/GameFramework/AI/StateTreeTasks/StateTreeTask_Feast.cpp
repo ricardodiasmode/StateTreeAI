@@ -76,16 +76,18 @@ void UStateTreeTask_Feast::FindFeastActorAround()
 
 void UStateTreeTask_Feast::OnFinishFeast()
 {
+	AICharacter->OnFinishInteractableEffectInteractionDelegate.RemoveAll(this);
 	FinishTask(true);
 }
 
 void UStateTreeTask_Feast::MoveFinished(FAIRequestID FaiRequestID, const FPathFollowingResult& PathFollowingResult)
 {
-	if (!AICharacter || PathFollowingResult.IsFailure() || !FeastActor)
+	if (!AICharacter || PathFollowingResult.IsFailure() || !FeastActor || !AIController)
 	{
 		FinishTask(false);
 		return;
 	}
+	AIController->GetPathFollowingComponent()->OnRequestFinished.RemoveAll(this);
 	
 	AICharacter->OnFinishInteractableEffectInteractionDelegate.AddUniqueDynamic(this, &UStateTreeTask_Feast::OnFinishFeast);
 	AICharacter->StartFeast(FeastActor);

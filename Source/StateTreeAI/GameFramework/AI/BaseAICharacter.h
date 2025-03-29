@@ -78,6 +78,7 @@ public:
 	void Attack();
 
 	void StartFeast(AInteractableEffect* FeastActor);
+	void OnFeast();
 	void OnFinishFeast();
 
 	FORCEINLINE UPatrolComponent* GetPatrolComponent() const { return PatrolComponent; }

@@ -6,10 +6,10 @@
 //- IA passando por chão queimando e do outro lado spawna objetos para feast:
 //- Feast (Usar utilidade com Vida);
 
-- feast andando depois de atacar por causa do notify;
-
 - Mapa mostrando todas as mecanicas;
 - explicar plugins na doc;
+*NavigationAS is a not ready for production multithreading plugin that I created for other project, and I find a perfect fit here.
+*CoreAS is a general purpose plugin that implements common logic that all projects may need.
 
 - Para extender:
 1. É possível facilmente fazer o personagem tomar dano, dado que todo o setup da IA ja está feito no UAttackAbility;

@@ -11,6 +11,7 @@
 #include "StateTreeAI/GameFramework/AbilitySystem/AttributeSets/BaseAttributeSet.h"
 #include "StateTreeAI/GameFramework/Components/PatrolComponent.h"
 #include "Components/NavComponentAS.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "StateTreeAI/GameFramework/Components/InteractWithEffectComponent.h"
 
@@ -150,9 +151,13 @@ void ABaseAICharacter::StartFeast(AInteractableEffect* FeastActor)
 	InteractWithEffectComponent->StartInteraction(FeastActor);
 }
 
-void ABaseAICharacter::OnFinishFeast()
-{
+void ABaseAICharacter::OnFeast()
+{ // Do interaction effects
 	InteractWithEffectComponent->FinishInteraction();
+}
+
+void ABaseAICharacter::OnFinishFeast()
+{ // Release tree
 	OnFinishInteractableEffectInteractionDelegate.Broadcast();
 }
 
