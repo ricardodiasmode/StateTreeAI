@@ -45,12 +45,12 @@ void UStateTreeTask_Attack::WaitAttackEnd(const FAbilityEndedData& AbilityEndedD
 	
 	ABaseAICharacter* AICharacter = Cast<ABaseAICharacter>(AIController->GetCharacter());
 	if (!AICharacter)
-	{
-		GPrintError("!AICharacter on UStateTreeTask_Attack::WaitAttackEnd. Will not proceed.");
+	{ // Not an error because this can happen
 		FinishTask(false);
 		return;
 	}
-	
+
+	AICharacter->GetAbilitySystemComponent()->OnAbilityEnded.RemoveAll(this);
 	const bool IsDistanceEnough = AICharacter->GetDistanceTo(AIController->Target) < DistanceToHitAgain;
 	FinishTask(!AbilityEndedData.bWasCancelled && IsDistanceEnough);
 }

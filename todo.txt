@@ -6,8 +6,6 @@
 //- IA passando por chão queimando e do outro lado spawna objetos para feast:
 //- Feast (Usar utilidade com Vida);
 
-- fix chase after recovery;
-
 - explicar plugins na doc;
 *NavigationAS is a not ready for production multithreading plugin that I created for other project, and I find a perfect fit here.
 *CoreAS is a general purpose plugin that implements common logic that all projects may need.

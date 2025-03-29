@@ -24,9 +24,12 @@ public:
 	float ChaseSpeed = 600.f;
 
 protected:
+	virtual EStateTreeRunStatus Tick(FStateTreeExecutionContext& Context, const float DeltaTime) override;
 	virtual EStateTreeRunStatus EnterState(FStateTreeExecutionContext& Context, const FStateTreeTransitionResult& Transition) override;
 
 public:
+	bool IsDistanceEnough();
+	
 	void MoveFinished(FAIRequestID FaiRequestID, const FPathFollowingResult& PathFollowingResult);
 	
 };
