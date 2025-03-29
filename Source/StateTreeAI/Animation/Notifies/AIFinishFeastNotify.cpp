@@ -3,6 +3,7 @@
 
 #include "AIFinishFeastNotify.h"
 
+#include "Misc/GeneralFunctionLibrary.h"
 #include "StateTreeAI/GameFramework/AI/BaseAICharacter.h"
 
 void UAIFinishFeastNotify::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,

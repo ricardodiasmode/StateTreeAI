@@ -4,7 +4,7 @@
 //- Attack;
 //- Stuck: NavigationSystemAS ativando quando cai em um lugar sem navmesh, para voltar para a navmesh;
 //- IA passando por chão queimando e do outro lado spawna objetos para feast:
-- Feast (Usar utilidade com Vida);
+//- Feast (Usar utilidade com Vida);
 - EXCLUIR Health E Tick DO CONTROLLER;
 
 - tentar usar StateTreeAI para evitar casts e colocar a função de pegar vida para o feast no character, em vez de no controller;

@@ -41,6 +41,5 @@ EStateTreeRunStatus UStateTreeTask_MoveToPatrolPoint::EnterState(FStateTreeExecu
 void UStateTreeTask_MoveToPatrolPoint::MoveFinished(FAIRequestID FaiRequestID,
 	const FPathFollowingResult& PathFollowingResult)
 {
-	GPrintDebugWithVar("path following result: %s", *UEnum::GetValueAsString(PathFollowingResult.Code));
 	FinishTask(PathFollowingResult.IsSuccess());
 }

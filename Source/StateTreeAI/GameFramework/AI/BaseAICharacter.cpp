@@ -129,7 +129,7 @@ void ABaseAICharacter::StartFeast(AInteractableEffect* FeastActor)
 	
 	SetActorRotation(DesiredRotation);
 
-	GetMesh()->PlayAnimation(FeastMontage, false);
+	GetMesh()->GetAnimInstance()->Montage_Play(FeastMontage);
 
 	InteractWithEffectComponent->StartInteraction(FeastActor);
 }
@@ -137,6 +137,7 @@ void ABaseAICharacter::StartFeast(AInteractableEffect* FeastActor)
 void ABaseAICharacter::OnFinishFeast()
 {
 	InteractWithEffectComponent->FinishInteraction();
+	OnFinishInteractableEffectInteractionDelegate.Broadcast();
 }
 
 UAbilitySystemComponent* ABaseAICharacter::GetAbilitySystemComponent() const
