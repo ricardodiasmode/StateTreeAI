@@ -16,10 +16,8 @@ EStateTreeRunStatus UStateTreeTask_StartPatrol::EnterState(FStateTreeExecutionCo
 	Super::EnterState(Context, Transition);
 	
 	if (!AIController)
-	{
-		GPrintError("!AIController on UStateTreeStartPatrolTask::EnterState. Will not proceed.");
 		return EStateTreeRunStatus::Failed;
-	}
+	
 	ABaseAICharacter* AICharacter = Cast<ABaseAICharacter>(AIController->GetCharacter());
 	if (!AICharacter)
 	{
