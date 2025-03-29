@@ -33,11 +33,7 @@ EStateTreeRunStatus UStateTreeTask_Feast::EnterState(FStateTreeExecutionContext&
 	FindFeastActorAround();
 
 	if (!FeastActor)
-	{
-		GPrintDebug("failed feast because could not find feast actor around");
 		return EStateTreeRunStatus::Failed;
-	}
-	GPrintDebug("feast found feast actor");
 	
 	AIController->GetPathFollowingComponent()->OnRequestFinished.AddUObject(this, &UStateTreeTask_Feast::MoveFinished);
 

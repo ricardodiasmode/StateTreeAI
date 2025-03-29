@@ -26,15 +26,10 @@ void ABaseAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	TrackHealth();
+	
 	StateTreeComponent->StartLogic();
 	StateTreeComponent->RestartLogic();
-}
-
-void ABaseAIController::Tick(float DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
-
-	Health = GetHealth();
 }
 
 void ABaseAIController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
@@ -51,9 +46,18 @@ void ABaseAIController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	}
 }
 
-float ABaseAIController::GetHealth() const
+void ABaseAIController::HealthChange(const FOnAttributeChangeData& OnAttributeChangeData)
+{
+	Health = OnAttributeChangeData.NewValue;
+}
+
+void ABaseAIController::TrackHealth()
 {
 	if (ABaseAICharacter* BaseAICharacter = Cast<ABaseAICharacter>(GetCharacter()))
-		return BaseAICharacter->GetAttributeSet()->GetHealth();
-	return 0.f;
+	{
+		FOnGameplayAttributeValueChange Delegate = BaseAICharacter->GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(UBaseAttributeSet::GetHealthAttribute());
+		Delegate.AddUObject(this, &ABaseAIController::HealthChange);
+
+		Health = BaseAICharacter->GetAttributeSet()->GetHealth();
+	}
 }

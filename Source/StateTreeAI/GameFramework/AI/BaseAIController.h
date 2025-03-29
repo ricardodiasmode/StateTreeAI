@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "GameplayEffectTypes.h"
 #include "Perception/AIPerceptionTypes.h"
 #include "BaseAIController.generated.h"
 
@@ -27,8 +28,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void Tick(float DeltaSeconds) override;
-
 public:
 	UFUNCTION()
 	void PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus);
@@ -36,6 +35,7 @@ public:
 	// Sets default values for this actor's properties
 	ABaseAIController();
 
-	UFUNCTION(BlueprintCallable)
-	float GetHealth() const;
+	/* Those functions should not be here in controller, but I don't find a way to set parameters inside StateTree */
+	void HealthChange(const FOnAttributeChangeData& OnAttributeChangeData);
+	void TrackHealth();
 };
