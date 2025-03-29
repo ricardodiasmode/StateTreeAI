@@ -4,6 +4,7 @@
 #include "BaseAICharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "BaseAIController.h"
 #include "NavigationSystem.h"
 #include "Components/CapsuleComponent.h"
 #include "Misc/GeneralFunctionLibrary.h"
@@ -34,6 +35,13 @@ void ABaseAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &ABaseAICharacter::HealthChange);
+}
+
+void ABaseAICharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
 	InitAbilitySystem();
 }
 
@@ -49,6 +57,14 @@ void ABaseAICharacter::InitAbilitySystem()
 void ABaseAICharacter::RecoveryFinish()
 {
 	OnRecoveryFinishDelegate.Broadcast();
+}
+
+void ABaseAICharacter::HealthChange(const FOnAttributeChangeData& Data)
+{
+	GetController<ABaseAIController>()->HealthChange(Data.NewValue);
+	
+	if (Data.NewValue <= 0)
+		Destroy();
 }
 
 void ABaseAICharacter::ActivateEffect(const TSubclassOf<UGameplayEffect>& Effect, AActor* Source)

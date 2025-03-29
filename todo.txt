@@ -6,8 +6,6 @@
 //- IA passando por chão queimando e do outro lado spawna objetos para feast:
 //- Feast (Usar utilidade com Vida);
 
-- devem morrer se a vida chegar a 0;
-
 - feast andando depois de atacar por causa do notify;
 
 - Mapa mostrando todas as mecanicas;
@@ -15,4 +13,5 @@
 
 - Para extender:
 1. É possível facilmente fazer o personagem tomar dano, dado que todo o setup da IA ja está feito no UAttackAbility;
-2. É possível facilmente fazer uma abilidade de ataque do personagem, já que o UAttackAbility pode também ser usado pelo character.
+2. É possível facilmente fazer uma abilidade de ataque do personagem, já que o UAttackAbility pode também ser usado pelo character;
+3. Fazer uma animação de morte ou ragdoll no ABaseAICharacter::HealthChange ao morrer;

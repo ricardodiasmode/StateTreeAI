@@ -35,7 +35,6 @@ public:
 	// Sets default values for this actor's properties
 	ABaseAIController();
 
-	/* Those functions should not be here in controller, but I don't find a way to set parameters inside StateTree */
-	void HealthChange(const FOnAttributeChangeData& OnAttributeChangeData);
-	void TrackHealth();
+	/* This function should not be here in controller, but I don't find a way to set parameters inside StateTree */
+	void HealthChange(const float NewValue);
 };

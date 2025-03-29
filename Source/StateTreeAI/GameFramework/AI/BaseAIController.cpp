@@ -5,6 +5,7 @@
 
 #include "BaseAICharacter.h"
 #include "Components/StateTreeAIComponent.h"
+#include "Misc/GeneralFunctionLibrary.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "StateTreeAI/GameFramework/GameplayCharacter.h"
 #include "StateTreeAI/GameFramework/AbilitySystem/AttributeSets/BaseAttributeSet.h"
@@ -26,8 +27,6 @@ void ABaseAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TrackHealth();
-	
 	StateTreeComponent->StartLogic();
 	StateTreeComponent->RestartLogic();
 }
@@ -46,18 +45,7 @@ void ABaseAIController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	}
 }
 
-void ABaseAIController::HealthChange(const FOnAttributeChangeData& OnAttributeChangeData)
+void ABaseAIController::HealthChange(const float NewValue)
 {
-	Health = OnAttributeChangeData.NewValue;
-}
-
-void ABaseAIController::TrackHealth()
-{
-	if (ABaseAICharacter* BaseAICharacter = Cast<ABaseAICharacter>(GetCharacter()))
-	{
-		FOnGameplayAttributeValueChange Delegate = BaseAICharacter->GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(UBaseAttributeSet::GetHealthAttribute());
-		Delegate.AddUObject(this, &ABaseAIController::HealthChange);
-
-		Health = BaseAICharacter->GetAttributeSet()->GetHealth();
-	}
+	Health = NewValue;
 }

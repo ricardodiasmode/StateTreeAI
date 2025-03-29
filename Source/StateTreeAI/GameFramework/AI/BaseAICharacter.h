@@ -56,8 +56,12 @@ private:
 	UFUNCTION()
 	void RecoveryFinish();
 
+	virtual void HealthChange(const FOnAttributeChangeData& Data);
+
 protected:
 	virtual void BeginPlay() override;
+
+	virtual void PossessedBy(AController* NewController) override;
 
 public:
 	// Sets default values for this character's properties
