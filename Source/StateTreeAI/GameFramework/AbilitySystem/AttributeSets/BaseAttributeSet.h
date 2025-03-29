@@ -20,7 +20,8 @@ UCLASS()
 class STATETREEAI_API UBaseAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
-	
+
+public:
 	UPROPERTY()
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UBaseAttributeSet, Health);

@@ -18,6 +18,9 @@ UPatrolComponent::UPatrolComponent()
 
 void UPatrolComponent::DefineCurrentPatrolPointToClosestPoint()
 {
+	if (!PatrolActor)
+		return;
+	
 	if (PatrolActor->GetPatrolPoints().IsEmpty())
 		return;
 	
@@ -34,6 +37,13 @@ void UPatrolComponent::DefineCurrentPatrolPointToClosestPoint()
 
 FVector UPatrolComponent::GetCurrentPatrolPointAndMoveToNext()
 {
+	if (!PatrolActor)
+	{
+		if (!GetOwner())
+			return FVector::ZeroVector;
+		return GetOwner()->GetActorLocation();
+	}
+	
 	const FVector CurrentPoint = PatrolActor->GetPatrolPoints()[CurrentPatrolPoint];
 	
 	CurrentPatrolPoint++;

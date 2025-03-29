@@ -14,7 +14,7 @@ class STATETREEAI_API UPatrolComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-	int CurrentPatrolPoint = -1;
+	int CurrentPatrolPoint = 0;
 
 public:
 	UPROPERTY(EditAnywhere, Category="Config|Patrol")

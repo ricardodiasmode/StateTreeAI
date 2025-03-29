@@ -10,6 +10,8 @@
 #include "StateTreeAI/GameFramework/AbilitySystem/AttributeSets/BaseAttributeSet.h"
 #include "StateTreeAI/GameFramework/Components/PatrolComponent.h"
 #include "Components/NavComponentAS.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "StateTreeAI/GameFramework/Components/InteractWithEffectComponent.h"
 
 // Sets default values
 ABaseAICharacter::ABaseAICharacter()
@@ -24,6 +26,8 @@ ABaseAICharacter::ABaseAICharacter()
 	AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>("AttributeSet");
 	
 	NavComponent = CreateDefaultSubobject<UNavComponentAS>("NavComponent");
+	
+	InteractWithEffectComponent = CreateDefaultSubobject<UInteractWithEffectComponent>("InteractWithEffectComponent");
 }
 
 void ABaseAICharacter::BeginPlay()
@@ -104,6 +108,35 @@ void ABaseAICharacter::StartRecovery()
 		NavComponent->OnMoveSuccess.AddUniqueDynamic(this, &ABaseAICharacter::RecoveryFinish);
 		NavComponent->WalkToLocation(ClosestPointOnNavigation, 15.f);
 	}
+}
+
+void ABaseAICharacter::SetPatrolActor(APatrolActor* PatrolActor)
+{
+	PatrolComponent->PatrolActor = PatrolActor;
+}
+
+void ABaseAICharacter::StartFeast(AInteractableEffect* FeastActor)
+{
+	if (!FeastMontage)
+	{
+		GPrintError("Could not feast: !FeastMontage.");
+		return;
+	}
+	
+	FVector DesiredLocation = FeastActor->GetActorLocation();
+	DesiredLocation.Z = GetActorLocation().Z;
+	const FRotator DesiredRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), DesiredLocation);
+	
+	SetActorRotation(DesiredRotation);
+
+	GetMesh()->PlayAnimation(FeastMontage, false);
+
+	InteractWithEffectComponent->StartInteraction(FeastActor);
+}
+
+void ABaseAICharacter::OnFinishFeast()
+{
+	InteractWithEffectComponent->FinishInteraction();
 }
 
 UAbilitySystemComponent* ABaseAICharacter::GetAbilitySystemComponent() const

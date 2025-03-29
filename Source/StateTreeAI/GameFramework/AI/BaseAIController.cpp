@@ -3,10 +3,11 @@
 
 #include "BaseAIController.h"
 
+#include "BaseAICharacter.h"
 #include "Components/StateTreeAIComponent.h"
 #include "Perception/AIPerceptionComponent.h"
-#include "Perception/AISenseConfig_Sight.h"
 #include "StateTreeAI/GameFramework/GameplayCharacter.h"
+#include "StateTreeAI/GameFramework/AbilitySystem/AttributeSets/BaseAttributeSet.h"
 
 // Sets default values
 ABaseAIController::ABaseAIController()
@@ -29,6 +30,13 @@ void ABaseAIController::BeginPlay()
 	StateTreeComponent->RestartLogic();
 }
 
+void ABaseAIController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	Health = GetHealth();
+}
+
 void ABaseAIController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
 	if (!Actor->IsA(AGameplayCharacter::StaticClass()))
@@ -41,4 +49,11 @@ void ABaseAIController::PerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 	{
 		Target = nullptr;
 	}
+}
+
+float ABaseAIController::GetHealth() const
+{
+	if (ABaseAICharacter* BaseAICharacter = Cast<ABaseAICharacter>(GetCharacter()))
+		return BaseAICharacter->GetAttributeSet()->GetHealth();
+	return 0.f;
 }
